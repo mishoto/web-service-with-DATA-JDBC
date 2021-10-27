@@ -1,4 +1,68 @@
 package dev.mihail.DTO;
 
-public class UserDTO {
+import dev.mihail.model.User;
+
+import javax.validation.constraints.NotNull;
+
+public class UserDTO implements UserDTOMapper {
+
+    private Long id;
+    private String f_name;
+    private String l_name;
+    private String e_mail;
+
+    private UserDTO() {
+    }
+
+    @Override
+    public UserDTO toUserDto(@NotNull User user) {
+        UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
+        userDTOBuilder.withID(user.getUser_id());
+        userDTOBuilder.withF_name(user.getUserFirstName());
+        userDTOBuilder.withL_name(user.getUserLastName());
+        userDTOBuilder.withE_mail(user.getUserEmail());
+        return userDTOBuilder.build();
+    }
+
+    @Override
+    public UserDTO toUserDtoFNameAndEmail(@NotNull User user) {
+        UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
+        userDTOBuilder.withF_name(user.getUserFirstName());
+        userDTOBuilder.withE_mail(user.getUserEmail());
+        return userDTOBuilder.build();
+    }
+
+    public static class UserDTOBuilder {
+        private Long id;
+        private String f_name;
+        private String l_name;
+        private String e_mail;
+
+        public UserDTOBuilder withID (Long id){
+            this.id = id;
+            return this;
+        }
+        public UserDTOBuilder withF_name (String firstName){
+            this.f_name = firstName;
+            return this;
+        }
+        public UserDTOBuilder withL_name (String lastName){
+            this.l_name = lastName;
+            return this;
+        }
+        public UserDTOBuilder withE_mail (String email){
+            this.e_mail = email;
+            return this;
+        }
+        public UserDTO build() {
+            UserDTO userDTO = new UserDTO();
+            userDTO.id = this.id;
+            userDTO.f_name = this.f_name;
+            userDTO.l_name = this.l_name;
+            userDTO.e_mail = this.e_mail;
+            return userDTO;
+        }
+    }
 }
+
+

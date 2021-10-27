@@ -17,18 +17,18 @@ public class UserDTO implements UserDTOMapper {
     @Override
     public UserDTO toUserDto(@NotNull User user) {
         UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
-        userDTOBuilder.withID(user.getUser_id());
-        userDTOBuilder.withF_name(user.getUserFirstName());
-        userDTOBuilder.withL_name(user.getUserLastName());
-        userDTOBuilder.withE_mail(user.getUserEmail());
+        userDTOBuilder.withID(user.getId());
+        userDTOBuilder.withF_name(user.getFirstName());
+        userDTOBuilder.withL_name(user.getLastName());
+        userDTOBuilder.withE_mail(user.getEmail());
         return userDTOBuilder.build();
     }
 
     @Override
     public UserDTO toUserDtoFNameAndEmail(@NotNull User user) {
         UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
-        userDTOBuilder.withF_name(user.getUserFirstName());
-        userDTOBuilder.withE_mail(user.getUserEmail());
+        userDTOBuilder.withF_name(user.getFirstName());
+        userDTOBuilder.withE_mail(user.getEmail());
         return userDTOBuilder.build();
     }
 

@@ -20,27 +20,27 @@ public class UserController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<String> saveUser(@RequestBody UserDTO userDTO) {
 
-        return ResponseEntity.ok(userDTOService.saveDTOUser(userDTO));
+        return ResponseEntity.ok().body(userDTOService.saveDTOUser(userDTO));
     }
 
     @GetMapping(path = "/search/{email}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
                                    consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam(value = "email") String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
 
-        return ResponseEntity.ok(userDTOService.getDTOUserByEmail(email));
+        return ResponseEntity.ok().body(userDTOService.getDTOUserByEmail(email));
     }
 
     @PutMapping(path = "/update", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserDTO> updateUserByEmail(@RequestBody UserDTO userDTO) {
 
-        return ResponseEntity.ok(userDTOService.updateDTOUserByEmail(userDTO));
+        return ResponseEntity.ok().body(userDTOService.updateDTOUserByEmail(userDTO));
     }
 
     @GetMapping(path = "/delete/{email}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<String> deleteUserByEmail(@RequestParam(value = "email") String email) {
+    public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {
 
-        return ResponseEntity.ok(userDTOService.deleteUserDTOByEmail(email));
+        return ResponseEntity.ok().body(userDTOService.deleteUserDTOByEmail(email));
     }
 }

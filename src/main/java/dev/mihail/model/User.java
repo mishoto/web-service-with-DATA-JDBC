@@ -1,13 +1,21 @@
 package dev.mihail.model;
 
-
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class User {
 
+    @NotNull
     private Long id;
+    @NotNull(message = "first name cannot be empty")
+    @Size(min = 2, max = 20, message = "first name must be between 2 and 20 characters")
     private String firstName;
+    @NotNull(message = "first name cannot be empty")
+    @Size(min = 2, max = 20, message = "last name must be between 2 and 20 characters")
     private String lastName;
+    @NotNull(message = "email cannot be empty")
+    @Email
     private String email;
 
     public User() {}

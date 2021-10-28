@@ -3,22 +3,25 @@ package dev.mihail.DAO;
 
 import dev.mihail.model.User;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserDAO<T, ID> {
 
-    int createUser(T u);
+    int createUser(T u) throws SQLSyntaxErrorException;
 
-    Optional<T> getUserById(ID u_id);
+    Optional<T> getUserById(ID u_id) throws SQLSyntaxErrorException;
 
-    List<User> getAllUsers();
+    User getUserByEmail(String email) throws SQLSyntaxErrorException;
 
-    Optional<T> updateUserById(ID u_id);
+    List<User> getAllUsers() throws SQLSyntaxErrorException;
 
-    User updateUserByEmail(String u_email);
+    Optional<T> updateUserById(ID u_id) throws SQLSyntaxErrorException;
 
-    Optional<T> deleteUserById(ID u_id);
+    User updateUserByEmail(T user) throws SQLSyntaxErrorException;
 
-    void deleteUserByEmail(String u_email);
+    Optional<T> deleteUserById(ID u_id) throws SQLSyntaxErrorException;
+
+    int deleteUserByEmail(String u_email) throws SQLSyntaxErrorException;
 }

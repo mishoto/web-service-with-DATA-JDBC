@@ -24,4 +24,6 @@ public interface UserDAO<T, ID> {
     Optional<T> deleteUserById(ID u_id) throws SQLSyntaxErrorException;
 
     int deleteUserByEmail(String u_email) throws SQLSyntaxErrorException;
+
+    List<T> saveAllUsers(List<T> users);
 }

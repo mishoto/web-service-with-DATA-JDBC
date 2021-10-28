@@ -1,12 +1,15 @@
 package dev.mihail.DAO;
 
 import dev.mihail.model.User;
-import org.jetbrains.annotations.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +39,8 @@ public class UserDAOService implements UserDAO<User, Long> {
         return jdbcTemplate.update(SQL_CREATE_USER);
     }
 
+
+
     @Override
     public Optional<User> getUserById(Long u_id) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, userRowMapper, u_id));
@@ -57,7 +62,7 @@ public class UserDAOService implements UserDAO<User, Long> {
     }
 
     @Override
-    public User updateUserByEmail(@NotNull User user) {
+    public User updateUserByEmail(User user) {
         User userFromDB = jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, userRowMapper, user.getEmail());
         if (userFromDB == null){
             throw new RuntimeException("User with that email not found");
@@ -78,5 +83,18 @@ public class UserDAOService implements UserDAO<User, Long> {
     @Override
     public int deleteUserByEmail(String u_email) {
         return jdbcTemplate.update(SQL_DELETE_USER_BY_EMAIL, userRowMapper, u_email);
+    }
+
+    @Override
+    public List<User> saveAllUsers(List<User> users) {
+        Assert.notNull(users, "Entities must not be null!");
+        List<User> resultList = new ArrayList<>();
+
+        for (int i=0; i < users.size(); i++){
+            User user = users.get(i);
+            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getFirstName(),user.getLastName(),user.getEmail()},
+                                                 new int[]{1, 2, 3});
+        }
+        return resultList;
     }
 }

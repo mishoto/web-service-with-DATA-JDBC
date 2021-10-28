@@ -90,10 +90,9 @@ public class UserDAOService implements UserDAO<User, Long> {
         Assert.notNull(users, "Entities must not be null!");
         List<User> resultList = new ArrayList<>();
 
-        for (int i=0; i < users.size(); i++){
-            User user = users.get(i);
-            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getFirstName(),user.getLastName(),user.getEmail()},
-                                                 new int[]{1, 2, 3});
+        for (User user : users) {
+            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getFirstName(), user.getLastName(), user.getEmail()},
+                    new int[]{1, 2, 3});
         }
         return resultList;
     }

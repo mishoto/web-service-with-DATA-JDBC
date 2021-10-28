@@ -11,18 +11,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 public class DataSourceHikariConfig {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties("app.datasource.main")
-    public HikariDataSource hikariDataSource(){
-       return DataSourceBuilder.create()
-               .type(HikariDataSource.class)
-               .build();
-    }
+//    @Bean
+//    @Primary
+//    @ConfigurationProperties("app.datasource.main")
+//    public HikariDataSource hikariDataSource(){
+//       return DataSourceBuilder.create()
+//               .type(HikariDataSource.class)
+//               .build();
+//    }
 
-    @Bean
-    public JdbcTemplate jdbcTemplateOfHikari(HikariDataSource hikariDataSource){
-        return new JdbcTemplate(hikariDataSource);
-    }
+//    @Bean
+//    public JdbcTemplate jdbcTemplateOfHikari(HikariDataSource hikariDataSource){
+//        return new JdbcTemplate(hikariDataSource);
+//    }
 
 }

@@ -2,6 +2,7 @@ package dev.mihail.controller;
 
 import dev.mihail.DTO.UserDTO;
 import dev.mihail.DTO.UserDTOService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user") //http://localhost:8092/user
 public class UserController {
 
+    @Autowired
     private final UserDTOService userDTOService;
 
     public UserController(UserDTOService userDTOService) {
         this.userDTOService = userDTOService;
     }
+
 
     @PostMapping(path = "/save", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

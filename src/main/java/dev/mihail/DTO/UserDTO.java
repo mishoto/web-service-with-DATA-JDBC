@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class UserDTO implements Serializable {
 
-    private UUID uuid;
+//    private UUID uuid;
     private String f_name;
     private String l_name;
     private String e_mail;
@@ -23,15 +23,15 @@ public class UserDTO implements Serializable {
     }
 
     public static class UserDTOBuilder {
-        private UUID uuid;
+//        private UUID uuid;
         private String f_name;
         private String l_name;
         private String e_mail;
 
-        public UserDTOBuilder withUUID (String email){
-            this.uuid = UUID.fromString(this.e_mail = email);
-            return this;
-        }
+//        public UserDTOBuilder withUUID (String email){
+//            this.uuid = UUID.fromString(this.e_mail = email);
+//            return this;
+//        }
         public UserDTOBuilder withF_name (String firstName){
             this.f_name = firstName;
             return this;
@@ -46,7 +46,7 @@ public class UserDTO implements Serializable {
         }
         public UserDTO build() {
             UserDTO userDTO = new UserDTO();
-            userDTO.uuid = this.uuid;
+//            userDTO.uuid = this.uuid;
             userDTO.f_name = this.f_name;
             userDTO.l_name = this.l_name;
             userDTO.e_mail = this.e_mail;
@@ -54,13 +54,13 @@ public class UserDTO implements Serializable {
         }
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+//    public UUID getUuid() {
+//        return uuid;
+//    }
+//
+//    public void setUuid(UUID uuid) {
+//        this.uuid = uuid;
+//    }
 
     public String getF_name() {
         return f_name;

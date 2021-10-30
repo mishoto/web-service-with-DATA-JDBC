@@ -33,7 +33,6 @@ public class UserDataGenerator extends Faker {
 
     User generateUser() {
         return new User(
-                number().numberBetween(1L, 20L),
                 name().firstName(),
                 name().lastName(),
                 internet().emailAddress()

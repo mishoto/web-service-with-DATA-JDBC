@@ -4,9 +4,9 @@ import dev.mihail.model.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDAOService implements UserDAO<User, Long> {
+public class UserDAOImpl implements UserDAO<User, Long> {
 
     private static final String SQL_CREATE_USER = "INSERT INTO USER (u_f_name, u_l_name, u_email) values (?, ?, ?)";
     private static final String SQL_SELECT_USER_BY_ID = "SELECT u_f_name = ?, u_l_name = ?, u_email = ? FROM USER WHERE u_id = ?";
@@ -26,11 +26,13 @@ public class UserDAOService implements UserDAO<User, Long> {
     private static final String SQL_DELETE_USER_BY_EMAIL = "DELETE USER WHERE u_email = ?";
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM USER";
 
-    private static final Logger log = LoggerFactory.getLogger(UserDAOService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserDAOImpl.class);
+    @Autowired
     private final JdbcTemplate jdbcTemplate;
+    @Autowired
     private final UserRowMapper userRowMapper;
 
-    public UserDAOService(JdbcTemplate jdbcTemplate, UserRowMapper userRowMapper) {
+    public UserDAOImpl(JdbcTemplate jdbcTemplate, UserRowMapper userRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.userRowMapper = userRowMapper;
     }
@@ -68,10 +70,10 @@ public class UserDAOService implements UserDAO<User, Long> {
         if (userFromDB == null){
             throw new RuntimeException("User with that email not found");
         }
-        userFromDB.setFirstName(user.getFirstName());
-        userFromDB.setLastName(user.getLastName());
+        userFromDB.setF_name(user.getF_name());
+        userFromDB.setL_name(user.getL_name());
         return jdbcTemplate.queryForObject(SQL_UPDATE_USER_BY_EMAIL,
-                                                    new Object[]{userFromDB.getFirstName(),userFromDB.getLastName()},
+                                                    new Object[]{userFromDB.getF_name(),userFromDB.getL_name()},
                                                     new int[]{1,2},
                                                     User.class);
     }
@@ -92,8 +94,9 @@ public class UserDAOService implements UserDAO<User, Long> {
         List<User> resultList = new ArrayList<>();
 
         for (User user : users) {
-            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getFirstName(), user.getLastName(), user.getEmail()},
+            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getF_name(), user.getL_name(), user.getEmail()},
                     new int[]{1, 2, 3});
+            System.out.println(user.getEmail());
         }
         return resultList;
     }

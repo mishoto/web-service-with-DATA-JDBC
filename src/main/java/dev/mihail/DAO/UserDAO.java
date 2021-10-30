@@ -2,12 +2,16 @@ package dev.mihail.DAO;
 
 
 import dev.mihail.model.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDAO<T, ID> {
+
+public interface UserDAO<T, ID> extends Repository<User, Long> {
+
 
     int createUser(T u) throws SQLSyntaxErrorException;
 

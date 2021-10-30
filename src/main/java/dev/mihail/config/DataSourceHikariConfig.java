@@ -1,4 +1,4 @@
-package dev.mihail.config;
+
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@Configuration
-public class DataSourceHikariConfig {
+//@Configuration
+//public class DataSourceHikariConfig {
 
 //    @Bean
 //    @Primary
@@ -25,4 +25,4 @@ public class DataSourceHikariConfig {
 //        return new JdbcTemplate(hikariDataSource);
 //    }
 
-}
+//}

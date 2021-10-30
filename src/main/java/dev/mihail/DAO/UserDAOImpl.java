@@ -5,10 +5,16 @@ import dev.mihail.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -27,9 +33,9 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM USER";
 
     private static final Logger log = LoggerFactory.getLogger(UserDAOImpl.class);
-    @Autowired
+
+
     private final JdbcTemplate jdbcTemplate;
-    @Autowired
     private final UserRowMapper userRowMapper;
 
     public UserDAOImpl(JdbcTemplate jdbcTemplate, UserRowMapper userRowMapper) {
@@ -41,7 +47,6 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     public int createUser(User u) {
         return jdbcTemplate.update(SQL_CREATE_USER);
     }
-
 
 
     @Override

@@ -11,7 +11,7 @@ public interface UserDTOStructMapper {
 //    @Mapping(target = "uuid", source = "email")
     @Mapping(target = "l_name", source = "l_name")
     @Mapping(target = "f_name", source = "f_name")
-    @Mapping(target = "e_mail", source = "email")
+    @Mapping(target = "e_mail", source = "e_email")
     UserDTO toUserDto(User user);
 
     @Mapping(target = "id", ignore = true)

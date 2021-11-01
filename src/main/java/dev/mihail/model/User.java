@@ -1,8 +1,6 @@
 package dev.mihail.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,69 +9,65 @@ import javax.validation.constraints.Size;
 public class User {
 
     @Id
-    @NotNull
-    private Long id;
-    @Column
+    private Long u_id;
     @NotNull(message = "first name cannot be empty")
     @Size(min = 2, max = 20, message = "first name must be between 2 and 20 characters")
-    private String f_name;
-    @Column
+    private String u_f_name;
     @NotNull(message = "first name cannot be empty")
     @Size(min = 2, max = 20, message = "last name must be between 2 and 20 characters")
-    private String l_name;
-    @Column
+    private String u_l_name;
     @NotNull(message = "email cannot be empty")
     @Email
-    private String email;
+    private String u_email;
 
     public User() {}
 
-    public User(String f_name, String l_name, String email) {
-        this.id = id;
-        this.f_name = f_name;
-        this.l_name = l_name;
-        this.email = email;
+    public User(Long u_id, String u_f_name, String u_l_name, String u_email) {
+        this.u_id = u_id;
+        this.u_f_name = u_f_name;
+        this.u_l_name = u_l_name;
+        this.u_email = u_email;
     }
 
-    public Long getId() {
-        return id;
+    public Long getU_id() {
+        return u_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setU_id(Long u_id) {
+        this.u_id = u_id;
     }
 
-    public String getF_name() {
-        return f_name;
+    public String getU_f_name() {
+        return u_f_name;
     }
 
-    public void setF_name(String f_name) {
-        this.f_name = f_name;
+    public void setU_f_name(String u_f_name) {
+        this.u_f_name = u_f_name;
     }
 
-    public String getL_name() {
-        return l_name;
+    public String getU_l_name() {
+        return u_l_name;
     }
 
-    public void setL_name(String l_name) {
-        this.l_name = l_name;
+    public void setU_l_name(String u_l_name) {
+        this.u_l_name = u_l_name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getU_email() {
+        return u_email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setU_email(String u_email) {
+        this.u_email = u_email;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "user_id=" + id +
-                ", userFirstName='" + f_name + '\'' +
-                ", userLastName='" + l_name + '\'' +
-                ", userEmail='" + email + '\'' +
+                "user_id=" + u_id +
+                ", userFirstName='" + u_f_name + '\'' +
+                ", userLastName='" + u_l_name + '\'' +
+                ", userEmail='" + u_email + '\'' +
                 '}';
     }
 }

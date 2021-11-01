@@ -13,12 +13,13 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Repository
 public class UserDAOImpl implements UserDAO<User, Long> {
 
-    private static final String SQL_CREATE_USER = "INSERT INTO USER (u_f_name, u_l_name, u_email) values (?, ?, ?)";
-    private static final String SQL_SELECT_USER_BY_ID = "SELECT u_f_name = ?, u_l_name = ?, u_email = ? FROM USER WHERE u_id = ?";
+    private static final String SQL_CREATE_USER = "INSERT INTO USER (u_id, u_f_name, u_l_name, u_email) values (?, ?, ?, ?)";
+    private static final String SQL_SELECT_USER_BY_ID = "SELECT u_id, u_f_name, u_l_name, u_email FROM USER WHERE u_id = ?";
     private static final String SQL_SELECT_USER_BY_EMAIL = "SELECT * FROM USER WHERE user.u_email LIKE ?";
     private static final String SQL_UPDATE_USER_BY_ID = "UPDATE USER SET u_f_name = ?, u_l_name = ?, u_email = ? WHERE u_id = ?";
     private static final String SQL_UPDATE_USER_BY_EMAIL = "UPDATE USER SET u_f_name = ?, u_l_name = ? WHERE u_email = ?";
@@ -44,18 +45,18 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     }
 
     public int getCountOfUsers() {
-            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER", Integer.class);
+        AtomicReference<Integer> count = new AtomicReference<>(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER", Integer.class));
+        return count.get();
     }
 
     @Override
     public int createUser(User u) {
-        return jdbcTemplate.update(SQL_CREATE_USER);
+        return jdbcTemplate.update(SQL_CREATE_USER, u.getU_id(), u.getU_f_name(), u.getU_l_name(), u.getU_email());
     }
 
     @Override
     public User getUserById(Long u_id) {
-        User user = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, new UserRowMapper(), u_id)).get();
-        return user;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, new UserRowMapper(), u_id)).get();
     }
 
     @Override
@@ -75,14 +76,14 @@ public class UserDAOImpl implements UserDAO<User, Long> {
 
     @Override
     public User updateUserByEmail(User user) {
-        User userFromDB = jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, new UserRowMapper(), user.getEmail());
+        User userFromDB = jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, new UserRowMapper(), user.getU_email());
         if (userFromDB == null){
             throw new RuntimeException("User with that email not found");
         }
-        userFromDB.setF_name(user.getF_name());
-        userFromDB.setL_name(user.getL_name());
+        userFromDB.setU_f_name(user.getU_f_name());
+        userFromDB.setU_l_name(user.getU_l_name());
         return jdbcTemplate.queryForObject(SQL_UPDATE_USER_BY_EMAIL,
-                                                    new Object[]{userFromDB.getF_name(),userFromDB.getL_name()},
+                                                    new Object[]{userFromDB.getU_f_name(),userFromDB.getU_l_name()},
                                                     new int[]{1,2},
                                                     User.class);
     }
@@ -103,7 +104,7 @@ public class UserDAOImpl implements UserDAO<User, Long> {
         List<User> resultList = new ArrayList<>();
 
         for (User user : users) {
-            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getF_name(), user.getL_name(), user.getEmail()},
+            jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getU_f_name(), user.getU_l_name(), user.getU_email()},
                     new int[]{1, 2, 3});
         }
         return resultList;

@@ -3,9 +3,7 @@ package dev.mihail.DTO;
 import dev.mihail.DAO.UserDAOImpl;
 import dev.mihail.model.User;
 
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -64,7 +62,7 @@ public class UserDTOService implements UserDTOStructMapper{
         if (user == null){
             throw new RuntimeException("User with this " + email + "don't exist");
         }
-        int rowsAffected = userDAOImpl.deleteUserByEmail(user.getEmail());
+        int rowsAffected = userDAOImpl.deleteUserByEmail(user.getU_email());
         return "User Successfully deleted, number of rows affected: " + rowsAffected;
     }
 
@@ -72,18 +70,18 @@ public class UserDTOService implements UserDTOStructMapper{
     public UserDTO toUserDto(User user) {
         UserDTO.UserDTOBuilder userDTOBuilder = new UserDTO.UserDTOBuilder();
 //        userDTOBuilder.withUUID(user.getEmail());
-        userDTOBuilder.withF_name(user.getF_name());
-        userDTOBuilder.withL_name(user.getL_name());
-        userDTOBuilder.withE_mail(user.getEmail());
+        userDTOBuilder.withF_name(user.getU_f_name());
+        userDTOBuilder.withL_name(user.getU_l_name());
+        userDTOBuilder.withE_mail(user.getU_email());
         return userDTOBuilder.build();
     }
 
     @Override
     public User toUser(UserDTO userDTO) {
         User user = new User();
-        user.setF_name(userDTO.getF_name());
-        user.setL_name(userDTO.getL_name());
-        user.setEmail(userDTO.getE_mail());
+        user.setU_f_name(userDTO.getF_name());
+        user.setU_l_name(userDTO.getL_name());
+        user.setU_email(userDTO.getE_mail());
         return user;
     }
 }

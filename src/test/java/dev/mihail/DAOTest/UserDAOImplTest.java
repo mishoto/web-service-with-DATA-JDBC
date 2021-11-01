@@ -2,24 +2,20 @@ package dev.mihail.DAOTest;
 
 import dev.mihail.DAO.UserDAOImpl;
 import dev.mihail.model.User;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
 import javax.sql.DataSource;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 
 public class UserDAOImplTest {
 
     private static final UserDAOImpl userDAOImplMock = new UserDAOImpl();
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeAll
     static void setup() {
@@ -28,6 +24,7 @@ public class UserDAOImplTest {
                 .addScript("classpath:/schema.sql")
                 .addScript("classpath:/data.sql")
                 .build();
+
 
         userDAOImplMock.setDataSource(dataSourceH2);
     }
@@ -50,6 +47,25 @@ public class UserDAOImplTest {
         User user = new User(7L, "Josh", "Long", "josh@email.us");
         int rowsAffected = userDAOImplMock.createUser(user);
         assertEquals(1, rowsAffected);
+        assertEquals(5, userDAOImplMock.getAllUsers().size());
+    }
+    @Test
+    void should_Check_If_User_IsUpdated_In_InDB() {
+        User userFromDB = userDAOImplMock.getUserById(1L);
+
+        userFromDB.setU_f_name("Peter");
+        userFromDB.setU_l_name("Norton");
+        userFromDB.setU_email(userFromDB.getU_email());
+        userDAOImplMock.updateUserById(userFromDB);
+        User userUpdated = userDAOImplMock.getUserById(1L);
+        assertNotEquals("J", String.valueOf(userUpdated.getU_f_name().indexOf(0)));
+    }
+
+    @Test
+    public void should_Check_Delete_By_ID_In_DB() {
+        int userListSize = userDAOImplMock.getAllUsers().size();
+        int rowsAffected = userDAOImplMock.deleteUserById(1L);
+        assertEquals(userListSize-rowsAffected, userDAOImplMock.getAllUsers().size());
     }
 
 }

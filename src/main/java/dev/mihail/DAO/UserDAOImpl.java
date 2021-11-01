@@ -23,7 +23,7 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     private static final String SQL_SELECT_USER_BY_EMAIL = "SELECT * FROM USER WHERE user.u_email LIKE ?";
     private static final String SQL_UPDATE_USER_BY_ID = "UPDATE USER SET u_f_name = ?, u_l_name = ?, u_email = ? WHERE u_id = ?";
     private static final String SQL_UPDATE_USER_BY_EMAIL = "UPDATE USER SET u_f_name = ?, u_l_name = ? WHERE u_email = ?";
-    private static final String SQL_DELETE_USER_BY_ID = "DELETE USER WHERE u_id = ?";
+    private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM USER WHERE u_id = ?";
     private static final String SQL_DELETE_USER_BY_EMAIL = "DELETE USER WHERE u_email = ?";
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM USER";
 
@@ -70,9 +70,17 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     }
 
     @Override
-    public Optional<User> updateUserById(Long u_id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_UPDATE_USER_BY_ID, new UserRowMapper(), u_id));
+    public User updateUserById(User u) {
+        Optional<User> userFromDB = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID,
+                                                        new UserRowMapper(),
+                                                        u.getU_id()));
+        if (userFromDB.isPresent()) {
+            jdbcTemplate.update(SQL_UPDATE_USER_BY_ID, new Object[]{u.getU_f_name(), u.getU_l_name(), u.getU_email()}, u.getU_id());
+        }
+        return jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, new UserRowMapper(), u.getU_id());
     }
+
+
 
     @Override
     public User updateUserByEmail(User user) {
@@ -89,8 +97,8 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     }
 
     @Override
-    public Optional<User> deleteUserById(Long u_id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_DELETE_USER_BY_ID, new UserRowMapper(), u_id));
+    public int deleteUserById(Long u_id) {
+        return jdbcTemplate.update(SQL_DELETE_USER_BY_ID, u_id);
     }
 
     @Override

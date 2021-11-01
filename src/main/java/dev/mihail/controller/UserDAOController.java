@@ -20,11 +20,11 @@ public class UserDAOController {
     }
 
 
-    @GetMapping(path = "/search/{email}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+    @GetMapping(path = "/search/email/", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) throws SQLSyntaxErrorException {
+    public User getUserByEmail(@RequestBody String email) throws SQLSyntaxErrorException {
 
-        return ResponseEntity.ok().body(userDAOImpl.getUserByEmail(email));
+        return userDAOImpl.getUserByEmail(email);
     }
     @PostMapping(path = "/save", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -33,9 +33,13 @@ public class UserDAOController {
         return ResponseEntity.ok().body(userDAOImpl.createUser(user));
     }
 
-    @GetMapping
-    public String greeting() {
-        return "hello world";
+    @GetMapping(path = "search/",
+                                            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public String greeting(@RequestBody String text) {
+        return "hello world" + text;
     }
-
+    @GetMapping(path = "search/")
+    public int getRecordsCount() {
+        return userDAOImpl.getCountOfUsers();
+    }
 }

@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface UserDAO<T, ID> extends Repository<User, Long> {
+public interface UserDAO<T, ID> {
 
 
     int createUser(T u) throws SQLSyntaxErrorException;
 
-    Optional<T> getUserById(ID u_id) throws SQLSyntaxErrorException;
+     User getUserById(ID u_id) throws SQLSyntaxErrorException;
 
     User getUserByEmail(String email) throws SQLSyntaxErrorException;
 

@@ -5,10 +5,12 @@ import dev.mihail.model.User;
 
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Service
+@Component
 public class UserDTOService implements UserDTOStructMapper{
 
     @Autowired
@@ -35,6 +37,15 @@ public class UserDTOService implements UserDTOStructMapper{
             throw new RuntimeException("User with this " + email + "don't exist");
         }
         User user = userDAOImpl.getUserByEmail(email);
+        return toUserDto(user);
+    }
+
+    public UserDTO getDTOUserById(Long id){
+        Optional optionalUser = Optional.ofNullable(userDAOImpl.getUserById(id));
+        if (optionalUser.isEmpty()){
+            throw new RuntimeException("User with this " + id + "don't exist");
+        }
+        User user = userDAOImpl.getUserById(id);
         return toUserDto(user);
     }
 

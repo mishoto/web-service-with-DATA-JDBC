@@ -29,7 +29,7 @@ public class User {
     public User() {}
 
     public User(String f_name, String l_name, String email) {
-
+        this.id = id;
         this.f_name = f_name;
         this.l_name = l_name;
         this.email = email;

@@ -4,17 +4,11 @@ import dev.mihail.model.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -25,7 +19,7 @@ public class UserDAOImpl implements UserDAO<User, Long> {
 
     private static final String SQL_CREATE_USER = "INSERT INTO USER (u_f_name, u_l_name, u_email) values (?, ?, ?)";
     private static final String SQL_SELECT_USER_BY_ID = "SELECT u_f_name = ?, u_l_name = ?, u_email = ? FROM USER WHERE u_id = ?";
-    private static final String SQL_SELECT_USER_BY_EMAIL = "SELECT u_f_name = ?, u_l_name = ?, u_email = ? FROM USER WHERE u_email = ?";
+    private static final String SQL_SELECT_USER_BY_EMAIL = "SELECT * FROM USER WHERE user.u_email LIKE ?";
     private static final String SQL_UPDATE_USER_BY_ID = "UPDATE USER SET u_f_name = ?, u_l_name = ?, u_email = ? WHERE u_id = ?";
     private static final String SQL_UPDATE_USER_BY_EMAIL = "UPDATE USER SET u_f_name = ?, u_l_name = ? WHERE u_email = ?";
     private static final String SQL_DELETE_USER_BY_ID = "DELETE USER WHERE u_id = ?";
@@ -35,12 +29,22 @@ public class UserDAOImpl implements UserDAO<User, Long> {
     private static final Logger log = LoggerFactory.getLogger(UserDAOImpl.class);
 
 
-    private final JdbcTemplate jdbcTemplate;
-    private final UserRowMapper userRowMapper;
+    private JdbcTemplate jdbcTemplate;
 
-    public UserDAOImpl(JdbcTemplate jdbcTemplate, UserRowMapper userRowMapper) {
+    public UserDAOImpl() {
+    }
+
+    public UserDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRowMapper = userRowMapper;
+
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    public int getCountOfUsers() {
+            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER", Integer.class);
     }
 
     @Override
@@ -48,30 +52,30 @@ public class UserDAOImpl implements UserDAO<User, Long> {
         return jdbcTemplate.update(SQL_CREATE_USER);
     }
 
-
     @Override
-    public Optional<User> getUserById(Long u_id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, userRowMapper, u_id));
+    public User getUserById(Long u_id) {
+        User user = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_ID, new UserRowMapper(), u_id)).get();
+        return user;
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, userRowMapper, email);
+        return jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, new UserRowMapper(), email);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return jdbcTemplate.query(SQL_SELECT_ALL_USERS, userRowMapper);
+        return jdbcTemplate.query(SQL_SELECT_ALL_USERS, new UserRowMapper());
     }
 
     @Override
     public Optional<User> updateUserById(Long u_id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_UPDATE_USER_BY_ID, userRowMapper, u_id));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_UPDATE_USER_BY_ID, new UserRowMapper(), u_id));
     }
 
     @Override
     public User updateUserByEmail(User user) {
-        User userFromDB = jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, userRowMapper, user.getEmail());
+        User userFromDB = jdbcTemplate.queryForObject(SQL_SELECT_USER_BY_EMAIL, new UserRowMapper(), user.getEmail());
         if (userFromDB == null){
             throw new RuntimeException("User with that email not found");
         }
@@ -85,12 +89,12 @@ public class UserDAOImpl implements UserDAO<User, Long> {
 
     @Override
     public Optional<User> deleteUserById(Long u_id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_DELETE_USER_BY_ID, userRowMapper, u_id));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_DELETE_USER_BY_ID, new UserRowMapper(), u_id));
     }
 
     @Override
     public int deleteUserByEmail(String u_email) {
-        return jdbcTemplate.update(SQL_DELETE_USER_BY_EMAIL, userRowMapper, u_email);
+        return jdbcTemplate.update(SQL_DELETE_USER_BY_EMAIL, new UserRowMapper(), u_email);
     }
 
     @Override
@@ -101,7 +105,6 @@ public class UserDAOImpl implements UserDAO<User, Long> {
         for (User user : users) {
             jdbcTemplate.update(SQL_CREATE_USER, new Object[]{user.getF_name(), user.getL_name(), user.getEmail()},
                     new int[]{1, 2, 3});
-            System.out.println(user.getEmail());
         }
         return resultList;
     }

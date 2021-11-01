@@ -1,6 +1,7 @@
 package dev.mihail.DTO;
 
 import dev.mihail.model.User;
+import org.springframework.context.annotation.Bean;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

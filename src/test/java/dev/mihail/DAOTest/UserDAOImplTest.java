@@ -66,9 +66,9 @@ public class UserDAOImplTest {
     void should_UpdateUser_Using_PreparedStatement() throws NoSuchFieldException {
         User userFromDB = userDAOImplMock.getUserById(1L);
         assertNotNull(userFromDB);
-        userFromDB.setU_l_name("Peter");
-        userFromDB.setU_f_name("Norton");
-        String query = UserDAOImpl.class.getDeclaredField("SQL_UPDATE_USER_BY_ID").toString();
+        userFromDB.setU_f_name("Peter");
+        userFromDB.setU_l_name("Norton");
+        String query = "UPDATE USER SET u_f_name = ?, u_l_name = ?, u_email = ? WHERE u_id = ?";
         jdbcTemplate.execute(query, (PreparedStatementCallback<Boolean>) ps -> {
             ps.setLong(4, userFromDB.getU_id());
             ps.setString(1, userFromDB.getU_f_name());

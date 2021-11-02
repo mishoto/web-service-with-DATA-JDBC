@@ -1,11 +1,6 @@
 package dev.mihail.DTO;
 
-import dev.mihail.model.User;
-import org.springframework.context.annotation.Bean;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.UUID;
 
 public class UserDTO implements Serializable {
 
@@ -33,17 +28,14 @@ public class UserDTO implements Serializable {
 //            this.uuid = UUID.fromString(this.e_mail = email);
 //            return this;
 //        }
-        public UserDTOBuilder withF_name (String firstName){
+        public void withF_name (String firstName){
             this.f_name = firstName;
-            return this;
         }
-        public UserDTOBuilder withL_name (String lastName){
+        public void withL_name (String lastName){
             this.l_name = lastName;
-            return this;
         }
-        public UserDTOBuilder withE_mail (String email){
+        public void withE_mail (String email){
             this.e_mail = email;
-            return this;
         }
         public UserDTO build() {
             UserDTO userDTO = new UserDTO();

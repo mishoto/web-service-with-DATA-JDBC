@@ -22,8 +22,14 @@ public class User {
 
     public User() {}
 
-    public User(String u_f_name, String u_l_name, String u_email) {
+    public User(Long u_id, String u_f_name, String u_l_name, String u_email) {
+        this.u_id = u_id;
+        this.u_f_name = u_f_name;
+        this.u_l_name = u_l_name;
+        this.u_email = u_email;
+    }
 
+    public User(String u_f_name, String u_l_name, String u_email) {
         this.u_f_name = u_f_name;
         this.u_l_name = u_l_name;
         this.u_email = u_email;

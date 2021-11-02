@@ -1,6 +1,6 @@
 package dev.mihail.DAOTest;
 
-import dev.mihail.DAO.UserRepository;
+
 import dev.mihail.model.User;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;

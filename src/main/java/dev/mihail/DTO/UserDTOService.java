@@ -12,12 +12,7 @@ import java.util.Optional;
 public class UserDTOService implements UserDTOStructMapper{
 
     @Autowired
-    private final UserDAOImpl userDAOImpl;
-
-    public UserDTOService(UserDAOImpl userDAOImpl) {
-        this.userDAOImpl = userDAOImpl;
-    }
-
+    private UserDAOImpl userDAOImpl;
 
     public String saveDTOUser(UserDTO userDTO){
         Optional<User> optionalUser = Optional.ofNullable(userDAOImpl.getUserByEmail(userDTO.getE_mail()));

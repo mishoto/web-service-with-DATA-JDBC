@@ -4,18 +4,30 @@ import dev.mihail.DAO.UserDAOImpl;
 import dev.mihail.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import javax.sql.DataSource;
-import java.util.List;
 
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+
 
 
 public class UserDAOImplTest {
 
     private static final UserDAOImpl userDAOImplMock = new UserDAOImpl();
+    @Autowired
+    private static JdbcTemplate jdbcTemplate;
 
     @BeforeAll
     static void setup() {
@@ -27,6 +39,7 @@ public class UserDAOImplTest {
 
 
         userDAOImplMock.setDataSource(dataSourceH2);
+        jdbcTemplate = new JdbcTemplate(dataSourceH2);
     }
 
     @Test
@@ -46,23 +59,29 @@ public class UserDAOImplTest {
     void shouldInsertNewUserInDB() {
         User user = new User(7L, "Josh", "Long", "josh@email.us");
         int rowsAffected = userDAOImplMock.createUser(user);
-        assertEquals(1, rowsAffected);
+       assertEquals(1, rowsAffected);
         assertEquals(5, userDAOImplMock.getAllUsers().size());
     }
     @Test
-    void should_Check_If_User_IsUpdated_In_InDB() {
+    void should_UpdateUser_Using_PreparedStatement() throws NoSuchFieldException {
         User userFromDB = userDAOImplMock.getUserById(1L);
-
-        userFromDB.setU_f_name("Peter");
-        userFromDB.setU_l_name("Norton");
-        userFromDB.setU_email(userFromDB.getU_email());
-        userDAOImplMock.updateUserById(userFromDB);
-        User userUpdated = userDAOImplMock.getUserById(1L);
-        assertNotEquals("J", String.valueOf(userUpdated.getU_f_name().indexOf(0)));
+        assertNotNull(userFromDB);
+        userFromDB.setU_l_name("Peter");
+        userFromDB.setU_f_name("Norton");
+        String query = UserDAOImpl.class.getDeclaredField("SQL_UPDATE_USER_BY_ID").toString();
+        jdbcTemplate.execute(query, (PreparedStatementCallback<Boolean>) ps -> {
+            ps.setLong(4, userFromDB.getU_id());
+            ps.setString(1, userFromDB.getU_f_name());
+            ps.setString(2, userFromDB.getU_l_name());
+            ps.setString(3, userFromDB.getU_email());
+            return ps.execute();
+        });
+        User updatedUser = userDAOImplMock.getUserById(1L);
+        assertThat("Peter").isEqualTo(updatedUser.getU_f_name());
     }
 
     @Test
-    public void should_Check_Delete_By_ID_In_DB() {
+    public void should_Check_Delete_By_Id_In_DB() {
         int userListSize = userDAOImplMock.getAllUsers().size();
         int rowsAffected = userDAOImplMock.deleteUserById(1L);
         assertEquals(userListSize-rowsAffected, userDAOImplMock.getAllUsers().size());
